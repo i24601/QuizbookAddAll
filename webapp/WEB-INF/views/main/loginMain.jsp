@@ -570,6 +570,7 @@
 			data : JSON.stringify(mainVo),
 			dataType: "json",
 			success : function(setList){
+				console.log("=========================================================");
 				console.log(setList);
 				for(var i=0;i<setList.length;i++) {
 					color = "#"
