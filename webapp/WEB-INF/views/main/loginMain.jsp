@@ -625,7 +625,7 @@
 	/* set 그리기 */
 	function render(mainVo) {
 		var str = "";
-		str += "<div class='userset-set' draggable='true' data-setno="+mainVo.setNo+" id='userset-"+mainVo.setNo+"' OnClick='location.href =\"${pageContext.request.contextPath }/study/main\"'>";
+		str += "<div class='userset-set' draggable='true' data-setno="+mainVo.setNo+" id='userset-"+mainVo.setNo+"' OnClick='location.href =\"${pageContext.request.contextPath }/study/"+mainVo.setNo+"\"'>";
 		str += "	<div class='setHeader'>";
 		str += "		<div class='setHeader-Save'>";
 		str += "			<button class='setHeader-Save-Button' data-setno="+mainVo.setNo+"><img src='${pageContext.request.contextPath}/assets/images/iconmonstr-plus-1-32.png' class='mainImg'></button>";
