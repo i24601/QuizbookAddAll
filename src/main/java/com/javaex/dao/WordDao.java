@@ -26,4 +26,11 @@ public class WordDao {
 		return wordList;
 	}
 	
+	//카드만들기
+	public int cardCreate(WordVo wordVo) {
+		System.out.println("wordDao:cardCreate");
+		System.out.println(wordVo.toString());
+		return sqlSession.insert("word.createWord", wordVo);
+	}
+	
 }

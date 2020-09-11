@@ -54,12 +54,17 @@ public class MainController {
 		UserVo loginUser = (UserVo) session.getAttribute("authUser");
 
 		System.out.println(loginUser);
+		
+		// 로그인한 유저 기본폴더 불러오기(사이드바 세트만들기용)
+		UserVo authUserVo = mainService.getUser(authUser.getId());
+		int authUserNo = authUserVo.getUserNo();
+		FolderVo userFolderVo = mainService.getFolder(authUserNo);
+		session.setAttribute("authUserFolder", userFolderVo);
 
 		// 아이디로 유저번호 알아내기
 		UserVo userVo = mainService.getUser(id);
 		model.addAttribute("userVo", userVo);
-		System.out.println("======유저번호=====");
-		System.out.println(userVo.getUserNo());
+
 		// 개인페이지 접속시 기본폴더 출력(나중에 최근학습 세트목록 불러오기로 수정)
 		int userNo = userVo.getUserNo();
 		FolderVo folderVo = mainService.getFolder(userNo);
@@ -105,7 +110,6 @@ public class MainController {
 		//int userNo = mainVo.getUserNo();
 		// 폴더 번호
 		int folderNo = mainVo.getFolderNo();
-		System.out.println("받은폴더번호"+folderNo);
 		// Main 나중에 이름 적당한거로 바꾸기
 		List<MainVo> setList = mainService.getSetList(folderNo);
 		System.out.println(setList.toString());
@@ -144,11 +148,13 @@ public class MainController {
 
 		System.out.println(vo.getFolderNo());
 		System.out.println(vo.getSetNo());
+		System.out.println(vo.getUserNo());
 
 		int folderNo = vo.getFolderNo();
 		int setNo = vo.getSetNo();
+		int userNo = vo.getUserNo();
 
-		mainService.getSet(folderNo, setNo);
+		mainService.getSet(folderNo, setNo, userNo);
 
 		return folderNo;
 

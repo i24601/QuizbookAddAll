@@ -58,11 +58,21 @@ public class StudyController {
 		return "study/main";
 	}
 	
-	@RequestMapping("/set")
-	public String Set() {
-		System.out.println("study/set");
-	
-		return "study/set";
+	@RequestMapping(value="/main", method={RequestMethod.GET, RequestMethod.POST})
+	public String study(HttpSession session, Model model){
+		System.out.println("studyController:main");
+		
+		//session 불러오기
+		UserVo loginUser = (UserVo) session.getAttribute("authUser");
+		System.out.println(loginUser);
+		
+		// 내 폴더리스트 불러오기
+		List<FolderVo> myfolderList = mainService.folderList(loginUser.getUserNo());
+		System.out.println("my폴더리스트 : " + myfolderList.toString());
+		model.addAttribute("myfolderList", myfolderList);
+
+		
+		return "study/main";
 	}
 
 }

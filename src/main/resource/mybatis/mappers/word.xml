@@ -13,4 +13,12 @@
 		]]>
 	</select>
 	
+	<!-- 카드 추가 -->
+	<insert id="createWord" parameterType="com.javaex.vo.WordVo">
+		<![CDATA[
+			insert into word values(wordNo.nextval, #{setNo}, #{word}, #{meaning}, '', #{orderNo})
+		]]>
+	</insert>
+	
+	
 </mapper>

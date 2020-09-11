@@ -212,6 +212,20 @@
 		
 		crt_index+=1;
 		
+		if(crt_index==0){
+			$(".previousButton,.card_left").hide();
+		} else {
+			$(".previousButton,.card_left").show();
+		}
+		
+		if(crt_index+1==list.length){
+			$(".nextButton,.card_right").hide();
+		} else {
+			$(".nextButton,.card_right").show();
+		}
+		
+		$("#crt_index").text(crt_index+1);
+		$("#last_index").text(list.length);
 		
 		$(".card_wrap").clearQueue();
 		$(".card").clearQueue();
@@ -271,7 +285,22 @@
 	$(".previousButton,.card_left").on('click',function() {
 		
 		crt_index-=1;
-						
+		
+		if(crt_index==0){
+			$(".previousButton,.card_left").hide();
+		} else {
+			$(".previousButton,.card_left").show();
+		}
+		
+		if(crt_index+1==list.length){
+			$(".nextButton,.card_right").hide();
+		} else {
+			$(".nextButton,.card_right").show();
+		}
+		
+		$("#crt_index").text(crt_index+1);
+		$("#last_index").text(list.length);
+		
 		console.log("버튼클릭");
 		$(".card_wrap").clearQueue();
 		$(".card").clearQueue();
@@ -329,17 +358,6 @@
 	var crt_index = 0;
 	
 	function card(index) {
-		if(crt_index==0){
-			$(".previousButton,.card_left").hide();
-		} else {
-			$(".previousButton,.card_left").show();
-		}
-		
-		if(crt_index+1==list.length){
-			$(".nextButton,.card_right").hide();
-		} else {
-			$(".nextButton,.card_right").show();
-		}
 		
 		console.log(list[crt_index].wordImg);
 		//글만 있는경우
@@ -364,6 +382,18 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		
+		if(crt_index==0){
+			$(".previousButton,.card_left").hide();
+		} else {
+			$(".previousButton,.card_left").show();
+		}
+		
+		if(crt_index+1==list.length){
+			$(".nextButton,.card_right").hide();
+		} else {
+			$(".nextButton,.card_right").show();
+		}
 		
 		card(crt_index);
 		

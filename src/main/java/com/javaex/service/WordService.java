@@ -23,4 +23,12 @@ public class WordService {
 		return wordList;
 	}
 	
+	//카드만들기
+	public int cardCreate(WordVo wordVo) {
+		System.out.println("WordService:cardCreate");
+		
+		return wordDao.cardCreate(wordVo);
+		
+	}
+	
 }
