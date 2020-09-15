@@ -6,8 +6,6 @@
 <head>
 <meta charset="UTF-8">
 
-
-
 <!-- <link rel="stylesheet"
 	href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 <link rel="stylesheet"
@@ -62,7 +60,7 @@
 					<!-- profileInfo -->
 					<div id="userprofile-Button">
 						<div class="leftButton">
-							<a href="${pageContext.request.contextPath}/study/set" class="user-alink">
+							<a href="${pageContext.request.contextPath}/set/${folderVo.folderNo }" id="userAlink" class="user-alink">
 								<img src="${pageContext.request.contextPath}/assets/images/iconmonstr-pencil-4-32.png" class="mainImg">
 							</a>
 						</div>
@@ -82,7 +80,7 @@
 				
 				<div id="user-set">
 					<div id="userset-folderName">
-						내 폴더
+						${folderVo.folderName }
 					</div>
 					
 					<div id="userset-setArea">
@@ -132,14 +130,16 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-body">
-				<select id="setCopy-folderArea">
+				<div class="folder-Area setCopyFolder">
 					
-				</select>
+				</div>
 			</div>
+			
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
 				<button type="button" class="btn btn-primary" id="setCopyModal-Button">복사</button>
 				<input type="text" value="" id="setCopyNo"><br>
+				<input type="text" value="" id="setCopyFolderNo"><br>
 			</div>
 		</div>
 		
@@ -153,7 +153,7 @@
 <div class="modal fade" id="folderCreateModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
-		<form action="${pageContext.request.contextPath }/folderCreate" method="get">
+		<form action="${pageContext.request.contextPath }/folderCreate" method="post">
 			<div class="modal-body">
 				<input type="text" name="folderName" placeholder="폴더이름" id="folderCreate-folderName">
 			</div>
@@ -224,8 +224,9 @@
 <!-- 우클릭메뉴 폴더 -->
 		<ul class='custom-menu myfolder-menu'>
 			<!-- 수정버튼 클릭시 세트수정폼(세트입력폼에서 약간 수정)으로 이동 -->
-			<li id="folder-setCreate" class='custom-menu-attribute bottom-line' onclick="location.href='#'">세트 만들기</li>
+			<li id="folder-setCreate" class='custom-menu-attribute bottom-line' onclick="">세트 만들기</li>
 			<li id="folderCreate" class='custom-menu-attribute bottom-line'>폴더 만들기</li>
+			<li id="folderNameModify" class='custom-menu-attribute bottom-line'>이름변경</li>
 			<li id="folderCopy" class='custom-menu-attribute bottom-line'>복사</li>
 			<li id="folderDelete" class='custom-menu-attribute'>삭제</li>
 		</ul>
@@ -298,6 +299,8 @@
 	$(document).on('click', '#setModify', function(){
 		event.preventDefault(); //a태그 기능 막기
 		console.log("수정버튼클릭");
+		var setNo = $("#setDelNo").val();
+		location.href = '${pageContext.request.contextPath}/set/setModify/' + setNo;
 		//세트입력폼으로 이동
 	});
 	
@@ -307,7 +310,7 @@
 		console.log("복사버튼클릭");
 		$("#setCopyModal").modal();
 		
-		var no = ${sessionScope.authUser.userNo};
+		/* var no = ${sessionScope.authUser.userNo};
 		console.log("authUser : " + no);
 		var mainVo = {
 				userNo: no
@@ -330,7 +333,28 @@
 			error : function(XHR, status, error) {
 				console.error(status + " : " + error);
 			}
-		});
+		}); */
+		
+	});
+	
+	/* 세트복사 폴더클릭 */
+	$(document).on('click', '.myContextmenu', function(){
+		console.log("세트복사 폴더클릭");
+		var $this = $(this);
+		
+		console.log("클릭한폴더 번호는: " + $this.data("folderno"));
+		
+		var clickfolderno = $this.data("folderno");
+		
+		$("#setCopyFolderNo").val(clickfolderno);
+		
+	});
+	
+	/* 삭제버튼클릭 */
+	$(document).on('click', '#setDelete', function(){
+		event.preventDefault();
+		console.log("삭제버튼클릭");
+		$("#setDeleteModal").modal();
 	});
 	
 	/* 모달창 복사버튼클릭 */
@@ -339,13 +363,17 @@
 		
 		var setNo = $("#setCopyNo").val();
 		console.log("세트번호:" + setNo);
-		var folderNo = $("#setCopy-folderArea").val();
 		
+		
+		var folderNo = $("#setCopyFolderNo").val();
 		console.log("폴더번호:" + folderNo);
+		
+		var userNo = ${sessionScope.authUser.userNo};
 		
 		var vo = {
 				setNo: setNo,
-				folderNo: folderNo
+				folderNo: folderNo,
+				userNo: userNo
 		}
 		
 		$.ajax({
@@ -434,6 +462,9 @@
 	    $("#folderDelete-groupNo").val(groupNo); 
 	    $("#folderDelete-orderNo").val(myorderNo);
 	    $("#folderDelete-depth").val(mydepth);
+	    
+	    //세트만들기 링크 설정
+	    $("#folder-setCreate").attr("onclick", "location.href='${pageContext.request.contextPath}/set/" + folderNo + "'");
 
 
 	    
@@ -506,6 +537,11 @@
 		$("#folderCreateModal").modal();
 	});
 	
+	/* 이름변경클릭 */
+	$(document).on('click', '#folderNameModify', function(){
+		console.log("폴더 이름변경");
+	});
+	
 	/* 복사클릭 */
 	$(document).on('click', '#folderCopy', function(){
 		console.log("폴더 복사하기");
@@ -572,7 +608,6 @@
 			data : JSON.stringify(mainVo),
 			dataType: "json",
 			success : function(setList){
-				console.log("=========================================================");
 				console.log(setList);
 				for(var i=0;i<setList.length;i++) {
 					color = "#"
@@ -648,33 +683,7 @@
 		$("#userset-setArea").append(str);
 
 	}
-	
-	function renderOption(folderVo) {
-		
-		var str = "";
-		str += "<option value=" + folderVo.folderNo + " id='folderNo-" + folderVo.folderNo + "'>" + folderVo.folderName + "</option>";
-		str += "";
-		
-		$("#setCopy-folderArea").append(str);
-	}
-	
-	
-	
-	/* <c:forEach items="${myfolderList }" var="folderList">
-	<c:choose>
-		<c:when test="${folderList.depth <= 2}">
-			<div class="folder-contents myfolderContents myfolderDepth-${folderList.depth }" data-folderno="${folderList.folderNo }" data-groupno="${folderList.groupNo }" data-rootno="${folderList.rootNo }" data-orderno="${folderList.orderNo }" data-depth="${folderList.depth }">
-				<i class="material-icons" data-ino="${folderList.folderNo }" style="font-size: 20px">keyboard_arrow_right</i>${folderList.folderName}
-			</div>
-		</c:when>
-		<c:otherwise>
-			<div class="folder-contents myfolderContents myfolderDepth-3" data-folderno="${folderList.folderNo }" data-groupno="${folderList.groupNo }" data-rootno="${folderList.rootNo }" data-orderno="${folderList.orderNo }" data-depth="${folderList.depth }">
-				<i class="material-icons" data-ino="${folderList.folderNo }" style="font-size: 20px">keyboard_arrow_right</i>${folderList.folderName}
-			</div>
-		</c:otherwise>
-	</c:choose>
-	</c:forEach> */
-	
+
 	
 </script>
 
